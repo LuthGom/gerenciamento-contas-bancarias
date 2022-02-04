@@ -29,15 +29,23 @@ class Conta {
     }
     return new Conta(cliente)
   }
-  static async depositoNaConta(contaAtual, contaAtualizada) {
-   return new Conta({
+   static depositoNaConta(contaAtual, contaAtualizada) {
+    console.log('qualuqer coisa')
+    return new Conta({
      cpf: contaAtual.cpf,
      nome: contaAtual.nome,
-     saldo: contaAtualizada.saldo || contaAtual.saldo,
+     saldo: contaAtualizada.saldo + contaAtual.saldo || contaAtual.saldo,
      created_at: contaAtual.created_at
    })
-
+   
   } 
+  static async deletaConta(cpf) {
+    const contaASerDeletada = await contaDao.deletaConta(cpf)
+    if(!contaASerDeletada) {
+      return null
+    }
+    return contaASerDeletada
+  }
   valida() {
     validacoes.validaNome(this.nome, "nome", 4);
   }

@@ -1,8 +1,7 @@
 const db = require("../infra/sqlite3-db");
 const { InternalServerError } = require("../erros/erros");
-
-module.exports = {
-  criaConta: (contaBancaria) => {
+class contaDao {
+  static criaConta(contaBancaria) {
     return new Promise((resolve, reject) => {
       db.run(
         `
@@ -11,7 +10,7 @@ module.exports = {
                     nome,
                     saldo,
                     created_at
-                ) VALUES (?,?,?,?)
+                ) VALUES (?,?,?,DATETIME())
                 `,
         [
           contaBancaria.cpf,
@@ -21,28 +20,30 @@ module.exports = {
         ],
         (erro) => {
           if (erro) {
-            reject("Erro ao add cliente!: ", erro.message);
+            reject("Erro ao add cliente! ", erro.message);
             console.log(erro);
           }
           return resolve();
         }
       );
     });
-  },
-  listaTodasAsContas:() =>{
-    return new Promise((resolve, reject) =>{
+  }
+  static listaTodasAsContas() {
+    return new Promise((resolve, reject) => {
       db.all(
         `
       SELECT * FROM contas;
-      `, (erro, contas) =>{
-        if(erro) {
-          return reject('Erro ao listar contas!', {err: erro.message})
+      `,
+        (erro, contas) => {
+          if (erro) {
+            return reject("Erro ao listar contas!", { err: erro.message });
+          }
+          return resolve(contas);
         }
-        return resolve(contas)
-      })
-    })
-  },
-  buscaPorCpf: (cpf) => {
+      );
+    });
+  }
+  static buscaPorCpf(cpf) {
     return new Promise((resolve, reject) => {
       db.get(
         `
@@ -58,22 +59,30 @@ module.exports = {
         }
       );
     });
-  },
-  depositoNaConta: (deposito, cpf) =>{
-    return new Promise((resolve, reject) =>{
+  }
+  static depositoNaConta(contaAtualizada, cpf) {
+    return new Promise((resolve, reject) => {
+      console.log(contaAtualizada);
       db.run(
         `
-        UPDATE contas SET cpf = ?, nome =?, saldo = ?, created_at = ? 
-        `,
-        [deposito],
-        (erro, conta) =>{
-          if(erro) {
+                UPDATE contas SET
+                    cpf = ?, 
+                    nome = ?,
+                    saldo = ?,
+                    created_at = ?
+                    WHERE cpf = ?
+            
+                `,
+        [...Object.values(contaAtualizada), cpf],
+        (erro) => {
+          if (erro) {
+            reject("Erro ao atualizar conta ", erro.message);
             console.log(erro);
-            return reject ('Não foi possível realizar o depósito na conta',{erro: erro.message})
           }
-          return resolve(conta)
+          return resolve();
         }
-      )
-    })
+      );
+    });
   }
-};
+}
+module.exports = contaDao;
