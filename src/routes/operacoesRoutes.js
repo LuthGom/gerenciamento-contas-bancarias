@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const router = Router();
-const operacoesController = require('../src/controllers/operacoes')
+const operacoesController = require('../controllers/operacoes')
 
 module.exports = 
 router

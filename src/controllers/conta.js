@@ -19,8 +19,12 @@ class ContaController {
     }
   }
   static async listaTodasAsContas(req, res) {
-    const contas = await Conta.listaTodasAsContas();
-    res.status(200).json(contas);
+    try {
+      const contas = await Conta.listaTodasAsContas();
+      res.status(200).json(contas);
+    } catch (erro) {
+      res.status(500).json(erro);
+    }
   }
   static async deletaConta(req, res) {
     try {
@@ -31,7 +35,6 @@ class ContaController {
       res.status(500).json({ erro: erro.message });
     }
   }
-  
 }
 
 module.exports = ContaController;

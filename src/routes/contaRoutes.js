@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const router = Router();
 
-const contaController = require('../src/controllers/conta');
+const contaController = require('../controllers/conta');
 
 module.exports = 
 router
