@@ -28,7 +28,7 @@ class OperacoesController {
     }
   }
   static async transferencia(req, res) {
-    const cpfTransferidor = req.params.cpf;
+    const cpfTransferidor = req.params.cpfTransferidor;
     const { cpf, created_at } = req.body;
     const valorDeTransferencia = req.body;
     try {
@@ -50,7 +50,6 @@ class OperacoesController {
           cpfRecebedor: cpf,
           created_at,
         });
-
         await contaDao.depositoNaConta(saldoTransferido, cpfTransferidor);
         await contaDao.depositoNaConta(saldoRecebido, cpf);
         await novoRegistro.geraRegistroTransferencia();
@@ -61,6 +60,7 @@ class OperacoesController {
         );
       }
     } catch (erro) {
+      console.log(erro);
       res.status(500).json({ erro: erro.message });
     }
   }

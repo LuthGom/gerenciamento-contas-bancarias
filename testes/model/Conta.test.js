@@ -1,24 +1,35 @@
 const request = require("supertest");
 const server = require("../../server");
-const contaDao = require("../../src/contaDao/contaDao");
-describe("EndPoints Get geral tests", () => {
-  test("validação da rota Get /contas", async () => {
-    const res = await request(server).get("/contas");
-    expect(res.statusCode).toBe(200);
-  });
-  test("validação da rota Get /registrosDeTransferencias", async () => {
-    const res = await request(server).get("/registrosDeTransferencias");
-    expect(res.statusCode).toBe(200);
-  });
-  test("validação da rota Get /registrosDeDepositos", async () => {
-    const res = await request(server).get("/registrosDeDepositos");
-    expect(res.statusCode).toBe(200);
-  });
-});
 
-describe("Endpoints Delete tests", () => {
-  test("validação da rota delete de contas", async () => {
-    const res = await request(server).delete("/contas/deletarConta/:cpf");
-    expect(res.statusCode).toBe(200);
+describe("Fazendo um depósito", () => {
+  test("deveria realizar um depósito", async () => {
+    const deposito = {
+      saldo: 10,
+    };
+    return request(server)
+      .post("/registrosDeDepositos/deposito/724.592.310-83")
+      .send(deposito)
+      .expect("Content-Type", /json/)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.saldo).toEqual(deposito.saldoDepositado);
+      });
+  });
+  test("deveria realizar uma transferencia", async () => {
+    const transferencia = {
+      cpf: "15175643797",
+      saldo: 1,
+    };
+    return request(server)
+      .post("/registrosDeTransferencias/transferencia/724.592.310-83")
+      .send(transferencia)
+      .expect("Content-Type", /json/)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.saldo).toEqual(
+          transferencia.saldoTransferido
+        );
+        expect(res.body.cpf).toEqual(transferencia.cpfRecebedor);
+      });
   });
 });
