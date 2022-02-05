@@ -1,5 +1,4 @@
-const { InvalidArgumentError } = require("../../../Formações de NodeJS da Alura/blog-do-codigo-aula-0/src/erros");
-
+const { InvalidArgumentError } = require('../erros/erros')
 class validacoes {
   static autenticacaoCPF(cpf) {
     const cadastroPF = cpf.replace(/\D/, "");
