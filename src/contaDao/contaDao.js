@@ -1,5 +1,4 @@
 const db = require("../infra/sqlite3-db");
-const { InternalServerError } = require("../erros/erros");
 class contaDao {
   static criaConta(contaBancaria) {
     return new Promise((resolve, reject) => {
@@ -10,18 +9,12 @@ class contaDao {
                     nome,
                     saldo,
                     created_at
-                ) VALUES (?,?,?,DATETIME())
+                ) VALUES (?,?,0,DATETIME())
                 `,
-        [
-          contaBancaria.cpf,
-          contaBancaria.nome,
-          contaBancaria.saldo,
-          contaBancaria.created_at,
-        ],
+        [...Object.values(contaBancaria)],
         (erro) => {
           if (erro) {
-            reject("Erro ao add cliente! ", erro.message);
-            console.log(erro);
+            reject("Erro ao criar conta! ", {erro: erro.message});
           }
           return resolve();
         }
@@ -36,7 +29,7 @@ class contaDao {
       `,
         (erro, contas) => {
           if (erro) {
-            return reject("Erro ao listar contas!", { err: erro.message });
+            return reject("Erro ao listar contas!", { erro: erro.message });
           }
           return resolve(contas);
         }
@@ -52,7 +45,8 @@ class contaDao {
         (erro, conta) => {
           if (erro) {
             return reject(
-              `Não foi possível encontrar a conta do cliente de CPF ${cpf}!`
+              `Não foi possível encontrar a conta do cliente de CPF: ${cpf}!`,
+              {erro: erro.message}
             );
           }
           return resolve(conta);
@@ -62,7 +56,6 @@ class contaDao {
   }
   static depositoNaConta(contaAtualizada, cpf) {
     return new Promise((resolve, reject) => {
-      console.log(contaAtualizada);
       db.run(
         `
                 UPDATE contas SET
@@ -76,13 +69,26 @@ class contaDao {
         [...Object.values(contaAtualizada), cpf],
         (erro) => {
           if (erro) {
-            reject("Erro ao atualizar conta ", erro.message);
-            console.log(erro);
+            reject("Erro ao atualizar conta ", {erro: erro.message});
           }
           return resolve();
         }
       );
     });
   }
+  static deletaConta(cpf) {
+    return new Promise((resolve, reject) => {
+      db.run(`
+      DELETE FROM contas WHERE cpf = ?
+      `, [cpf], 
+      (erro) =>{
+        if(erro) {
+          reject(`Erro ao deletar cliente de cpf ${cpf}`, {erro: erro.message})
+        }
+        return resolve();
+      });
+    });
+  }
+  
 }
 module.exports = contaDao;
