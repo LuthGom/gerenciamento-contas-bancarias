@@ -13,14 +13,37 @@ CREATE TABLE IF NOT EXISTS "contas" (
     "created_at" DATETIME NOT NULL
 )`;
 
-function criaTabelaDeContas() {
+const REGISTRO_DE_TRANSFERENCIAS_SCHEMA = `
+  CREATE TABLE IF NOT EXISTS "registros_de_transferencias" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "cpfTransferidor" VARCHAR(64) NOT NULL,
+    "saldoTransferido" VARCHAR(64) NOT NULL,
+    "cpfRecebedor" VARCHAR(64) NOT NULL,
+    "created_at" VARCHAR(64) NOT NULL
+  )
+`
+const REGISTRO_DE_DEPOSITOS = `
+CREATE TABLE IF NOT EXISTS "registros_de_depositos" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "cpf" VARCHAR(64) NOT NULL,
+  "saldoDepositado" VARCHAR(64) NOT NULL,
+  "created_at" VARCHAR(64) NOT NULL
+)
+`
+function criaTabelas() {
   db.run(CONTA_SCHEMA, (erro) => {
-    if (erro) console.log("Erro ao Criar tabela de clientes:", erro);
+    if (erro) console.log("Erro ao Criar tabela de contas:", erro);
+  });
+  db.run(REGISTRO_DE_TRANSFERENCIAS_SCHEMA, (erro) => {
+    if (erro) console.log("Erro ao Criar tabela de registro de transferencias:", erro);
+  });
+  db.run(REGISTRO_DE_DEPOSITOS, (erro) => {
+    if (erro) console.log("Erro ao Criar tabela de registro de depositos:", erro);
   });
 }
 
 db.serialize(() => {
-  criaTabelaDeContas();
+  criaTabelas();
 });
 
 module.exports = db;
