@@ -27,17 +27,18 @@ class Conta {
     }
     return new Conta(cliente);
   }
-  static debitoNaConta(contaAtual, contaAtualizada) { 
-    validacoes.validcaDeOperacoes(contaAtual, contaAtualizada)  
+  static  debitoNaConta(contaAtual, contaAtualizada) { 
+    validacoes.validacaoDeOperacoes(contaAtualizada)  
+    validacoes.validacaoDeTransferencias(contaAtual, contaAtualizada)
     return new Conta({
       cpf: contaAtual.cpf,
       nome: contaAtual.nome,
-      saldo: contaAtual.saldo - contaAtualizada.saldo || contaAtual.saldo,
+      saldo: contaAtual.saldo - contaAtualizada.saldo,
       created_at: contaAtual.created_at,
     });
   }
   static depositoNaConta(contaAtual, contaAtualizada) {
-    validacoes.validcaDeOperacoes(contaAtual, contaAtualizada)  
+    validacoes.validacaoDeOperacoes(contaAtualizada)  
    
     return new Conta({
       cpf: contaAtual.cpf,

@@ -64,14 +64,18 @@ class validacoes {
       );
     }
   }
-  static validcaDeOperacoes(contaAtual, contaAtualizada) {
+  static validacaoDeOperacoes(contaAtualizada) {
     if (contaAtualizada.saldo <= 0) {
       throw new InvalidArgumentError("Valor inválido.");
-    } else if (contaAtualizada.saldo > 2000) {
+    }
+    if (contaAtualizada.saldo > 2000) {
       throw new InvalidArgumentError(
         "Valor de transação maior que o permitido. Deposite até 2000 por transação!"
       );
-    } else if (contaAtualizada.saldo > contaAtual.saldo) {
+    }
+  }
+  static validacaoDeTransferencias(contaAtual, contaAtualizada) {
+    if (contaAtualizada.saldo > contaAtual.saldo) {
       throw new InvalidArgumentError(
         "Valor de retirada maior do que o saldo em conta. Transação negada!"
       );
