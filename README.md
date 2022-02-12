@@ -71,8 +71,8 @@ e rode o seguinte comando no terminal:</li>
 | ------ | ---- | --------- |
 | **GET** | `/registrosDeDepositos` | Lista todos os registros de depósitos |
 | **GET** | `/registrosDeTransferencias` | Lista todos os registros de depósitos |
-| **POST** | `/operacoes/transferencia/:cpf` | Registra uma nova transferência bancária |
-| **POST** | `/operacoes/deposito/:cpf` | Registra uma novo depósito bancário |
+| **PATCH** | `/operacoes/transferencia/:cpf` | Registra uma nova transferência bancária |
+| **PATCH** | `/operacoes/deposito/:cpf` | Registra uma novo depósito bancário |
 
 ## Campos necessários para cadastrar uma nova conta:
 
