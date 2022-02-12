@@ -1,4 +1,4 @@
-const { InvalidArgumentError } = require('../erros/erros')
+const { InvalidArgumentError } = require("../erros/erros");
 class validacoes {
   static autenticacaoCPF(cpf) {
     const cadastroPF = cpf.replace(/\D/, "");
@@ -61,6 +61,19 @@ class validacoes {
     } else if (valor.length <= minimo) {
       throw new InvalidArgumentError(
         `O campo ${nome} precisa ser maior que ${minimo} caracteres!`
+      );
+    }
+  }
+  static validcaDeOperacoes(contaAtual, contaAtualizada) {
+    if (contaAtualizada.saldo <= 0) {
+      throw new InvalidArgumentError("Valor inválido.");
+    } else if (contaAtualizada.saldo > 2000) {
+      throw new InvalidArgumentError(
+        "Valor de transação maior que o permitido. Deposite até 2000 por transação!"
+      );
+    } else if (contaAtualizada.saldo > contaAtual.saldo) {
+      throw new InvalidArgumentError(
+        "Valor de retirada maior do que o saldo em conta. Transação negada!"
       );
     }
   }

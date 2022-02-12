@@ -27,15 +27,8 @@ class Conta {
     }
     return new Conta(cliente);
   }
-  static debitoNaConta(contaAtual, contaAtualizada) {
-    if (contaAtualizada.saldo > contaAtual.saldo) {
-      throw new InvalidArgumentError(
-        "Valor de retirada maior do que o saldo em conta. Transação negada!"
-      );
-    }
-    if (contaAtualizada.saldo <= 0) {
-      throw new InvalidArgumentError("Valor inválido.");
-    }
+  static debitoNaConta(contaAtual, contaAtualizada) { 
+    validacoes.validcaDeOperacoes(contaAtual, contaAtualizada)  
     return new Conta({
       cpf: contaAtual.cpf,
       nome: contaAtual.nome,
@@ -44,14 +37,7 @@ class Conta {
     });
   }
   static depositoNaConta(contaAtual, contaAtualizada) {
-    if (contaAtualizada.saldo > 2000) {
-      throw new InvalidArgumentError(
-        `O limite máximo para depósitos em conta são de ${2000}`
-      );
-    }
-    if (contaAtualizada.saldo <= 0) {
-      throw new InvalidArgumentError("Valor inválido.");
-    }
+    validacoes.validcaDeOperacoes(contaAtual, contaAtualizada)  
    
     return new Conta({
       cpf: contaAtual.cpf,
