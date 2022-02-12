@@ -32,17 +32,8 @@ class OperacoesController {
     const { cpf, created_at } = req.body;
     const valorDeTransferencia = req.body;
     try {
-      if (cpfTransferidor && cpf) {
-        const contaTransferidora = await contaDao.buscaPorCpf(cpfTransferidor);
-        const contaRecebedora = await contaDao.buscaPorCpf(cpf);
-        const saldoTransferido = Conta.debitoNaConta(
-          contaTransferidora,
-          valorDeTransferencia
-        );
-        const saldoRecebido = Conta.depositoNaConta(
-          contaRecebedora,
-          valorDeTransferencia
-        );
+      console.log('entrei na conta');
+      Conta.transferenciaBancaria(cpfTransferidor, valorDeTransferencia, cpf)
         // gerando um novo registro na tabela de registros de transferencias com os valores do parametro e body.
         const novoRegistro = new RegistroTransferencia({
           cpfTransferidor,
@@ -50,15 +41,9 @@ class OperacoesController {
           cpfRecebedor: cpf,
           created_at,
         });
-        await contaDao.depositoNaConta(saldoTransferido, cpfTransferidor);
-        await contaDao.depositoNaConta(saldoRecebido, cpf);
         await novoRegistro.geraRegistroTransferencia();
         return res.status(200).json(novoRegistro);
-      } else {
-        throw new InvalidArgumentError(
-          "Um ou mais cpf's não estão cadastrados!"
-        );
-      }
+      
     } catch (erro) {
       res.status(500).json({ erro: erro.message });
     }
